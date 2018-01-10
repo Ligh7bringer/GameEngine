@@ -30,7 +30,7 @@ int player2score = 0;
 void Reset() {
 	// reset paddle position
 	paddles[0].setPosition(10 + paddleSize.x / 2, gameHeight / 2);
-	paddles[1].setPosition(gameWidth - paddleSize.x - 10, gameHeight / 2);
+	paddles[1].setPosition(gameWidth - paddleSize.x + 5, gameHeight / 2);
 
 	//reset ball position
 	ball.setPosition(gameWidth / 2, gameHeight / 2);
@@ -156,6 +156,11 @@ void Update(RenderWindow &window) {
 		ball.move(-10, 0);
 		cout << "RIGHT paddle collision" << endl;
 	}
+	
+	if(paddles[0].getPosition().y + paddleSize.y / 2 > gameHeight || paddles[0].getPosition().y - paddleSize.y / 2 < 0) 
+		paddles[0].move(0, -direction);
+	if(paddles[1].getPosition().y + paddleSize.y / 2 > gameHeight || paddles[1].getPosition().y - paddleSize.y / 2 < 0) 
+		paddles[1].move(0, -direction2);	
 }
 
 void Render(RenderWindow &window) {
