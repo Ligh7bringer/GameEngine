@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 using namespace sf;
 using namespace std;
@@ -20,6 +21,11 @@ bool server = false;
 
 CircleShape ball;
 RectangleShape paddles[2];
+Font font;
+Text text;
+
+int player1score = 0;
+int player2score = 0;
 
 void Reset() {
 	// reset paddle position
@@ -30,13 +36,25 @@ void Reset() {
 	ball.setPosition(gameWidth / 2, gameHeight / 2);
 
 	ballVelocity = { server ? 100.0f : -100.0f, 60.0f };
+
+	text.setString(to_string(player1score) + " : " + to_string(player2score));
+	text.setPosition((gameWidth * 0.5f) - (text.getLocalBounds().width * 0.5f), 0);
 }
 
 void Load() {
+	//load font
+	if (!font.loadFromFile("res/fonts/TravelingTypewriter.ttf")) {
+		cout << "Couldn't load font!" << endl;
+	}
+
+	text.setFont(font);
+	text.setCharacterSize(24);
+	text.setColor(Color::White);
+
 	//set size and origin of paddles
 	for (auto &p_ : paddles) {
 		p_.setSize(paddleSize - Vector2f(3, 3));
-		p_.setSize(paddleSize / 2.f);	
+		p_.setOrigin(paddleSize / 2.f);	
 	}
 
 	// set size and origin of balls
@@ -68,6 +86,7 @@ void Update(RenderWindow &window) {
 	float direction = 0.0f;
 	float direction2 = 0.0f;
 
+	// handle keyboard inputs
 	if (Keyboard::isKeyPressed(controls[0])) {
 		direction--;
 	}
@@ -80,7 +99,16 @@ void Update(RenderWindow &window) {
 	if (Keyboard::isKeyPressed(controls[3])) {
 		direction2++;
 	}
+
 	paddles[0].move(0, direction * paddleSpeed * dt);
+
+	// "AI"
+	if (paddles[1].getPosition().y < ball.getPosition().y) {
+		direction2++;
+	}
+	else if (paddles[1].getPosition().y > ball.getPosition().y) {
+		direction2--;
+	}
 	paddles[1].move(0, direction2 * paddleSpeed * dt);
 
 	ball.move(ballVelocity * dt);
@@ -100,25 +128,34 @@ void Update(RenderWindow &window) {
 		ballVelocity.y *= -1.1f;
 		ball.move(0, 10);	
 	}
+	//right wall
 	else if (bx > gameWidth) {
-		Reset();
+		server = false;
+		player1score++;
+		Reset();		
 	}
+	//left wall
 	else if (bx < 0) {
-		Reset();
+		player2score++;
+		server = true;
+		Reset();		
 	}
 	else if (bx < paddleSize.x &&
 			by > paddles[0].getPosition().y - (paddleSize.y * 0.5) &&
 			by < paddles[0].getPosition().y + (paddleSize.y * 0.5)) {
 		ballVelocity.x *= -1.1f;
-		ballVelocity.y *= 1.1f;
+		ballVelocity.y *= 1.1f;	
+		ball.move(10, 0);
+		cout << "LEFT paddle collision!" << endl;
 	}
-	else if (bx < paddleSize.x &&
+	else if (bx > paddles[1].getPosition().x &&
 			by > paddles[1].getPosition().y - (paddleSize.y * 0.5) &&
 			by < paddles[1].getPosition().y + (paddleSize.y * 0.5)) {
 		ballVelocity.x *= -1.1f;
 		ballVelocity.y *= 1.1f;
+		ball.move(-10, 0);
+		cout << "RIGHT paddle collision" << endl;
 	}
-	
 }
 
 void Render(RenderWindow &window) {
@@ -126,6 +163,7 @@ void Render(RenderWindow &window) {
 	window.draw(paddles[0]);
 	window.draw(paddles[1]);
 	window.draw(ball);
+	window.draw(text);
 }
 
   int main() {

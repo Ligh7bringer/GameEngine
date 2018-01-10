@@ -1,1 +1,1 @@
-# GameEngine
+# Games Engineering practicals
