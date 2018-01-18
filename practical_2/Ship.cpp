@@ -1,5 +1,6 @@
 #include "ship.h"
 #include "game.h"
+#include "bullet.h"
 #include <iostream>
 
 using namespace sf;
@@ -19,6 +20,16 @@ Ship::Ship(IntRect ir) : Sprite() {
 
 void Ship::Update(const float &dt) {}
 
+void Ship::Explode() {
+	setTextureRect(IntRect(128, 32, 32, 32));
+	_exploded = true;
+	cout << "Game over!!" << endl;
+}
+
+bool Ship::isExploded() {
+	return _exploded;
+}
+
 Ship::~Ship() = default;
 
 //invader class
@@ -31,16 +42,28 @@ Invader::Invader(IntRect ir, sf::Vector2f pos) : Ship(ir) {
 
 void Invader::Update(const float &dt) {
 	Ship::Update(dt);
-	cout << direction << endl;
 
 	move(dt * (direction ? 1.0f : -1.0f) * speed, 0);
 
 	if ((direction && getPosition().x > gameWidth - 16) || (!direction && getPosition().x < 16)) {
 		direction = !direction;
 		for (int i = 0; i < ships.size(); ++i) {
-			ships[i]->move(0, 24);			
+			if(ships[i] != player)
+				ships[i]->move(0, 24);			
 		}
 	}
+
+	static float firetime = 0.0f;
+	firetime -= dt;
+
+	if (firetime <= 0 && rand() % 100 == 0) {
+		Bullet::Fire(getPosition(), true);
+		firetime = 4.0f + (rand() % 60);
+		cout << "Invader firing" << endl;
+	}
+	
+	//remove exploded ships from the screen
+
 }
 
 //player class
@@ -51,6 +74,8 @@ Player::Player() : Ship(IntRect(160, 32, 32, 32)) {
 //float direction = 0.0f;
 float playerSpeed = 100.0f;
 void Player::Update(const float &dt) {
+	static vector<Bullet *> bullets;
+
 	Ship::Update(dt);
 
 	//move left
@@ -63,9 +88,20 @@ void Player::Update(const float &dt) {
 		move(dt * playerSpeed, 0);
 	}
 
+	//player is not allowed to go offscreen
 	if (getPosition().x + 32.0f > gameWidth) {
 		setPosition(gameWidth - 32.0f, gameHeight - 32.0f);
 	} else if (getPosition().x < 0) {
 		setPosition(0, gameHeight - 32.0f);
+	}
+
+	//shoot 
+	static float firetime = 0.0f;
+	firetime -= dt;
+
+	if (firetime <= 0 && Keyboard::isKeyPressed(Keyboard::Space)) {
+		Bullet::Fire(getPosition(), false);
+		firetime = 0.7f;
+		cout << "shooting" << endl;
 	}
 }

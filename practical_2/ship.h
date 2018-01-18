@@ -2,17 +2,18 @@
 #include <SFML/Graphics.hpp>
 
 class Ship : public sf::Sprite {
-	protected:
-		sf::IntRect _sprite;
-		Ship();
+protected:
+	sf::IntRect _sprite;
+	Ship();
+	bool _exploded = false;
 		
-	public:
-	
-	explicit Ship(sf::IntRect ir);
-	
-	virtual ~Ship() = 0;
-	
+public:	
+	explicit Ship(sf::IntRect ir);	
+	virtual ~Ship() = 0;	
 	virtual void Update(const float &dt);	
+
+	bool isExploded();
+	virtual void Explode();
 	
 };
 
