@@ -24,3 +24,9 @@ public:
 	static bool direction;
 	static float speed;
 };
+
+class Player : public Ship {
+public:
+	Player();
+	void Update(const float &dt) override;
+};

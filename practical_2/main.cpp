@@ -29,6 +29,9 @@ void Load() {
 		y += 36.0f;
 		x = 16.0f;
 	}
+
+	Player *player = new Player();
+	ships.push_back(player);
 }
 
 void Update(RenderWindow &window) {
@@ -52,7 +55,6 @@ void Update(RenderWindow &window) {
 	//update ships
 	for (auto &s : ships) {
 		s->Update(dt);
-		cout << "Updating ships..." << endl;
 	}
 }
 
