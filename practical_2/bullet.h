@@ -6,6 +6,7 @@ public:
 	static void Update(const float &dt);
 	static void Render(sf::RenderWindow &window);
 	static void Fire(const sf::Vector2f &pos, const bool mode);
+	static void Reset();
 
 	Bullet(const sf::Vector2f &pos, const bool mode);
 	~Bullet() = default;

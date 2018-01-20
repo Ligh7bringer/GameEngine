@@ -7,7 +7,8 @@ using namespace sf;
 using namespace std;
 
 bool Invader::direction = true;
-float Invader::speed = 15.0f;
+float Invader::speed = 35.0f;
+float playerSpeed = 100.0f;
 
 //ship class
 Ship::Ship() {};
@@ -20,50 +21,69 @@ Ship::Ship(IntRect ir) : Sprite() {
 
 void Ship::Update(const float &dt) {}
 
+//used when a ship is destroyed
 void Ship::Explode() {
 	setTextureRect(IntRect(128, 32, 32, 32));
+	setOrigin(16, 16);
 	_exploded = true;
-	cout << "Game over!!" << endl;
+	if (this == player) {
+		gameOver = true;
+	}
 }
 
+//returns whether a ship is destroyed
 bool Ship::isExploded() {
 	return _exploded;
 }
 
+//destructor
 Ship::~Ship() = default;
 
 //invader class
 Invader::Invader() : Ship() {}
 
+//constructor
 Invader::Invader(IntRect ir, sf::Vector2f pos) : Ship(ir) {
 	setOrigin(16, 16);
 	setPosition(pos);
 }
 
 void Invader::Update(const float &dt) {
+	//ship movement
 	Ship::Update(dt);
 
 	move(dt * (direction ? 1.0f : -1.0f) * speed, 0);
 
-	if ((direction && getPosition().x > gameWidth - 16) || (!direction && getPosition().x < 16)) {
+	//change direction when about to go offscreen
+	if (((direction && getPosition().x > gameWidth - 16) || (!direction && getPosition().x < 16)) && !isExploded()) {
 		direction = !direction;
 		for (int i = 0; i < ships.size(); ++i) {
-			if(ships[i] != player)
+			if(ships[i] != player && !ships[i]->isExploded())
 				ships[i]->move(0, 24);			
 		}
 	}
 
+	//invader shooting
 	static float firetime = 0.0f;
 	firetime -= dt;
 
 	if (firetime <= 0 && rand() % 100 == 0) {
 		Bullet::Fire(getPosition(), true);
 		firetime = 4.0f + (rand() % 60);
-		cout << "Invader firing" << endl;
 	}
 	
-	//remove exploded ships from the screen
+	static float explosiontime = 1.0f;
 
+	//remove exploded ships from the screen	
+	for (auto &s : ships) {
+		if (s->isExploded()) {
+			explosiontime -= dt;
+		}
+		if (explosiontime <= 0.0f) {
+			s->setPosition(-100, -100);
+			explosiontime = 1.0f;
+		}
+	}
 }
 
 //player class
@@ -72,10 +92,7 @@ Player::Player() : Ship(IntRect(160, 32, 32, 32)) {
 }
 
 //float direction = 0.0f;
-float playerSpeed = 100.0f;
 void Player::Update(const float &dt) {
-	static vector<Bullet *> bullets;
-
 	Ship::Update(dt);
 
 	//move left
@@ -102,6 +119,5 @@ void Player::Update(const float &dt) {
 	if (firetime <= 0 && Keyboard::isKeyPressed(Keyboard::Space)) {
 		Bullet::Fire(getPosition(), false);
 		firetime = 0.7f;
-		cout << "shooting" << endl;
 	}
 }

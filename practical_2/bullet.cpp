@@ -8,35 +8,36 @@ using namespace std;
 
 unsigned char Bullet::bulletPointer = '0';
 Bullet Bullet::bullets[256];
+float bulletSpeed = 35.0f;
 
 Bullet::Bullet() {}
 
-Bullet::Bullet(const sf::Vector2f &pos, const bool mode) {
+//constructor
+Bullet::Bullet(const sf::Vector2f &pos, const bool mode) : Sprite() {
 	setPosition(pos);
+	setOrigin(0, 0);
 	_mode = mode;
 	setTexture(spritesheet);
 
 	if (_mode)
 		setTextureRect(IntRect(32, 32, 32, 32));
 	else
-		setTextureRect(IntRect(72, 32, 32, 32));
+		setTextureRect(IntRect(64, 32, 32, 32));
 }
 
+//moves bullets
 void Bullet::Update(const float &dt) {
 	for (auto &b : bullets) {
-		if (b._mode) {
-			b.move({ 0, 35 * dt });			
-		}
-		else {
-			b.move({ 0, -35 * dt });
-		}
-		b._Update(dt);
+			b.move({ 0, bulletSpeed * dt * (b._mode ? 1.0f : -1.0f) });	
+			b._Update(dt);
 	}
 
 }
 
+//checks for collisions
 void Bullet::_Update(const float & dt) {
 	if (getPosition().y < -32 || getPosition().y > gameHeight + 32) {
+		//bullet is off screen - do nothing
 		return;
 	}
 	else {
@@ -64,12 +65,22 @@ void Bullet::_Update(const float & dt) {
 }
 
 void Bullet::Render(sf::RenderWindow &window) {
-	for (auto &b : bullets) {
+	for (auto b : bullets) {
 		window.draw(b);
 	}
 }
 
+//initialises the next bullet to be fired
 void Bullet::Fire(const sf::Vector2f &pos, const bool mode) {
 	bullets[++bulletPointer] = Bullet(pos, mode);
+}
+
+//removes all bullets from the screen
+void Bullet::Reset()
+{
+	for (auto &b : bullets) {
+		b.setPosition(-100, -100);
+	}
+	bulletPointer = '0';
 }
 
