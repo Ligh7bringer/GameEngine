@@ -67,6 +67,8 @@ void Update(RenderWindow &window) {
 	// recalculate delta time
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
+	float fps = 1.0f / dt;
+	//cout << to_string(fps) << endl;
 	//check and consume events
 	Event event;
 	while (window.pollEvent(event)) {

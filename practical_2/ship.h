@@ -12,7 +12,7 @@ public:
 	virtual ~Ship() = 0;	
 	virtual void Update(const float &dt);	
 
-	bool isExploded();
+	bool isExploded() const;
 	virtual void Explode();
 	
 };

@@ -32,7 +32,7 @@ void Ship::Explode() {
 }
 
 //returns whether a ship is destroyed
-bool Ship::isExploded() {
+bool Ship::isExploded() const {
 	return _exploded;
 }
 
