@@ -136,6 +136,17 @@ const size_t LevelSystem::getWidth()
 	return _width;
 }
 
+Vector2f LevelSystem::getStart()
+{
+	for (size_t y = 0; y < LevelSystem::getHeight(); ++y) {
+		for (size_t x = 0; x < LevelSystem::getWidth(); ++x) {
+			if (getTile({ x, y }) == START) {
+				return getTilePosition({ x, y }) + Vector2f(50.0f, 50.0f);
+			}
+		}
+	}
+}
+
 void LevelSystem::Render(RenderWindow &window) {
 	for (size_t i = 0; i < _width * _height; ++i) {
 		window.draw(*_sprites[i]);

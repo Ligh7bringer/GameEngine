@@ -34,9 +34,15 @@ add_executable(PRACTICAL_3 ${SOURCES})
 target_include_directories(PRACTICAL_3 SYSTEM PRIVATE ${SFML_INCS})
 target_link_libraries(PRACTICAL_3 lib_tile_level_loader lib_maths sfml-graphics)
 
+## PRACTICAL 4 PAC MAN ##
+file(GLOB_RECURSE SOURCES practical_4/*.cpp practical_4/*.h)
+add_executable(PRACTICAL_4_PACMAN ${SOURCES})
+target_include_directories(PRACTICAL_4_PACMAN SYSTEM PRIVATE ${SFML_INCS})
+target_link_libraries(PRACTICAL_4_PACMAN sfml-graphics)
+
 ## COPY RESOURCES ##
 add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/res" 											${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/res)
-add_dependencies(PRACTICAL_2_INVADERS copy_resources)
+add_dependencies(PRACTICAL_4_PACMAN copy_resources)
 
 ## Tile Loader lib
 file(GLOB_RECURSE SOURCE_FILES lib_tile_level_loader/*.cpp lib_tile_level_loader/*.h)

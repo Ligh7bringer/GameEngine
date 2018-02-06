@@ -43,4 +43,3 @@ bool Player::validMove(sf::Vector2f pos)
 {
 	return (ls::getTileAt(pos) != ls::WALL);
 }
-

@@ -9,8 +9,6 @@ using namespace std;
 Player *player;
 
 void Load() {
-	player = new Player();
-
 	ls::loadLevelFile("res/levels/maze_3.txt");
 	for (size_t y = 0; y < ls::getHeight(); ++y) {
 		for (size_t x = 0; x < ls::getWidth(); ++x) {
@@ -18,6 +16,8 @@ void Load() {
 		}
 		cout << endl;
 	}
+
+	player = new Player();
 }
 
 void Update(RenderWindow &window) {

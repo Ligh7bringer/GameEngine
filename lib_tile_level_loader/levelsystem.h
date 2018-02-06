@@ -25,6 +25,7 @@ public:
 	static TILE getTileAt(sf::Vector2f);
 	const static size_t getHeight();
 	const static size_t getWidth();
+	static sf::Vector2f getStart();
 
 protected:
 	static std::unique_ptr<TILE[]> _tiles;
