@@ -13,7 +13,7 @@ private:
 public:
 	MenuScene();
 	void Update(double dt) override;
-	void Render() override;
+	void Render(sf::RenderWindow &window) override;
 	void Load() override;
 };
 
@@ -26,6 +26,6 @@ private:
 public:
 	GameScene() = default;
 	void Update(double dt) override;
-	void Render() override;
+	void Render(sf::RenderWindow &window) override;
 	void Load() override;
 };

@@ -47,7 +47,7 @@ void Update(RenderWindow &window) {
 }
 
 void Render(RenderWindow &window) {
-	activeScene->Render();
+	activeScene->Render(window);
 	Renderer::render();
 }
 

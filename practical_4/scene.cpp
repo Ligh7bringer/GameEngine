@@ -5,7 +5,7 @@ void Scene::Update(double dt)
 {
 }
 
-void Scene::Render()
+void Scene::Render(sf::RenderWindow &window)
 {
 }
 

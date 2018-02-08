@@ -29,19 +29,20 @@ void MenuScene::Load() {
 
 void MenuScene::Update(double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Space)) {
-		activeScene = menuScene;
+		activeScene = gameScene;
 	}
 
 	Scene::Update(dt);
+	_ents.Update(dt);
 }
 
-void MenuScene::Render() {
-	Scene::Render();
+void MenuScene::Render(sf::RenderWindow &window) {
+	Scene::Render(window);
+	_ents.Render(window);
 	Renderer::queue(&text);
 }
 
 //GAME SCENE
-
 void GameScene::Respawn() {
 }
 
@@ -50,16 +51,16 @@ void GameScene::Update(double dt) {
 		activeScene = menuScene;
 	}
 	Scene::Update(dt);
+	_ents.Update(dt);
 }
 
-void GameScene::Render() {
-	Scene::Render();
-	//Renderer::queue(&text);
+void GameScene::Render(sf::RenderWindow &window) {
+	Scene::Render(window);
+	_ents.Render(window);
 }
 
 void GameScene::Load() {	
-	text.setString("Game scene!");
-
+	//text.setString("Game scene!");
 	auto player = make_shared<Player>();
 	_ents.list.push_back(player);
 
