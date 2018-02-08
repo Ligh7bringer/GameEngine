@@ -4,8 +4,6 @@
 #include <memory>
 
 class Entity {
-
-
 protected:
 	std::unique_ptr<sf::Shape> _shape;
 	sf::Vector2f _position;
