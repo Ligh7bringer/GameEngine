@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "player.h"
-#include "ghost.h"
-#include "entity.h"
+#include "ecm.h"
 #include "system_renderer.h"
 #include "pacman.h"
 #include "scene.h"
@@ -47,7 +45,7 @@ void Update(RenderWindow &window) {
 }
 
 void Render(RenderWindow &window) {
-	activeScene->Render(window);
+	activeScene->Render();
 	Renderer::render();
 }
 
