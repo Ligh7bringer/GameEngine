@@ -1,5 +1,6 @@
 #include "ecm.h"
 
+//Entity
 Entity::Entity()
 {
 }
@@ -60,6 +61,7 @@ void Entity::setVisible(bool _value)
 {
 }
 
+//Component
 Component::Component(Entity * p)
 {
 	_parent = p;
@@ -74,8 +76,11 @@ Component::~Component()
 {
 }
 
+//Entity Manager
 void EntityManager::Render() {
-
+	for (auto &_e : list) {
+		_e->Render();
+	}
 }
 
 void EntityManager::Update(double dt) {

@@ -32,6 +32,11 @@ public:
 };
 
 class EnemyAIComponent : public ActorMovementComponent {
+protected:
+	sf::Vector2f _direction;
+	enum STATE {DEADEND, ROAMING, ROTATING, ROTATED};
+	STATE _state;
+
 public:
 	EnemyAIComponent() = delete;
 	explicit EnemyAIComponent(Entity *p);

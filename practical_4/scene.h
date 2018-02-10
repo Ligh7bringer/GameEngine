@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ecm.h"
 
 class Scene {

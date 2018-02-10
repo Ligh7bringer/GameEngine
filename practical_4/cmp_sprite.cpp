@@ -15,5 +15,4 @@ sf::Shape& ShapeComponent::getShape() const {
 }
 
 ShapeComponent::ShapeComponent(Entity *p) : Component(p), _shape(std::make_shared<sf::CircleShape>()) {
-	
 }
