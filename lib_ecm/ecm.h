@@ -43,6 +43,10 @@ public:
 		std::shared_ptr<T> sp(std::make_shared<T>(this, params...));
 		_components.push_back(sp);
 		return sp;
+	}	
+
+	const std::vector<std::shared_ptr<Component>>& getComponents() {
+		return _components;
 	}
 };
 
@@ -60,7 +64,8 @@ protected:
 
 public:
 	Component() = delete;
-	bool is_forDeletion() const;
+	bool is_forDeletion();
+	void setForDeletion();
 	virtual void Update(double dt) = 0;
 	virtual void Render() = 0;
 	virtual ~Component();

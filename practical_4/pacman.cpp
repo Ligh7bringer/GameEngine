@@ -6,6 +6,7 @@
 #include "cmp_sprite.h"
 #include "cmp_actor_movement.h"
 #include "levelsystem.h"
+#include "cmp_pickup.h"
 
 using namespace std;
 using namespace sf;
@@ -25,6 +26,8 @@ void MenuScene::Load() {
 	if (Keyboard::isKeyPressed(Keyboard::Space)) {
 		activeScene = gameScene;
 	}
+
+	text.setPosition(Vector2f((700 * 0.5f) - (text.getLocalBounds().width * 0.5f), 0));
 	text.setString("Almost Pacman");
 	text.setFont(font);
 }
@@ -47,12 +50,50 @@ void MenuScene::Render() {
 //GAME SCENE
 vector<shared_ptr<Entity>> ghosts;
 shared_ptr<Entity> player;
+vector<shared_ptr<Entity>> nibbles;
+vector<shared_ptr<Entity>> npcs;
+
+shared_ptr<Entity> GameScene::makeNibble(sf::Vector2ul& nl, sf::Color c, float size) {
+	auto cherry = make_shared<Entity>();
+	cherry->setPosition(static_cast<Vector2f>(nl));
+
+	auto s = cherry->addComponent<ShapeComponent>();
+	s->setShape<sf::CircleShape>(size);
+	s->getShape().setFillColor(c);
+	s->getShape().setOrigin(size, size);
+
+	auto ps = cherry->addComponent<PickUpComponent>();
+	ps->setEntities(npcs);
+
+	return cherry;
+}
+
 void GameScene::Respawn() {
+	for (auto n : nibbles) {
+		n->setForDelete();
+		n.reset();
+	}
+	nibbles.clear();
+
 	_ents.list[0]->setPosition(ls::findTiles(ls::START)[0]);
 
 	auto ghost_spawns = ls::findTiles(ls::ENEMY);
 	for (int i = 1; i < _ents.list.size(); ++i) {
 		_ents.list[i]->setPosition(ghost_spawns[rand() % ghost_spawns.size()]);
+	}
+
+	auto nibbleLoc = ls::findTiles(ls::EMPTY);
+	for (const auto &nl : nibbleLoc) {
+		auto cherry = makeNibble(static_cast<Vector2ul>(nl), Color::Red, 2);
+		_ents.list.push_back(cherry);
+		nibbles.push_back(cherry);
+	}
+
+	nibbleLoc = ls::findTiles(ls::WAYPOINT);
+	for (const auto &nl : nibbleLoc) {
+		auto cherry = makeNibble(static_cast<Vector2ul>(nl), Color::Green, 5);
+		_ents.list.push_back(cherry);
+		nibbles.push_back(cherry);
 	}
 }
 
@@ -63,6 +104,7 @@ void GameScene::Update(double dt) {
 
 	for (auto &g : ghosts) {
 		if (length(g->getPosition() - player->getPosition()) < 30.0f) {
+			std::cout << "Game over!" << std::endl;
 			Respawn();
 		}
 	}
@@ -90,6 +132,7 @@ void GameScene::Load() {
 	s->getShape().setFillColor(Color::Yellow);
 	s->getShape().setOrigin(10.0f, 10.0f);
 	_ents.list.push_back(pl);
+	npcs.push_back(pl);
 	player = pl;
 
 	const sf::Color ghost_cols[]{
@@ -110,8 +153,10 @@ void GameScene::Load() {
 
 		_ents.list.push_back(ghost);
 		ghosts.push_back(ghost);
+		npcs.push_back(ghost);
 		pos += Vector2f(70.0f, 0);
 	}
 
 	Respawn();
 }
+

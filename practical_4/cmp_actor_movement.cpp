@@ -32,6 +32,10 @@ void ActorMovementComponent::setSpeed(float speed) {
 	_speed = speed;
 }
 
+void ActorMovementComponent::increaseSpeed(float speed) {
+	_speed += speed;
+}
+
 //PLAYER MOVEMENT COMPONENT
 PlayerMovementComponent::PlayerMovementComponent(Entity *p) : ActorMovementComponent(p) {}
 

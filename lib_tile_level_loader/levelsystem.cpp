@@ -10,7 +10,7 @@ size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 Vector2f LevelSystem::_offset = Vector2f{ 0 , 0 };
 
-float LevelSystem::_tileSize(100.0f);
+float LevelSystem::_tileSize = 25.0f;
 vector<std::unique_ptr<sf::RectangleShape>> LevelSystem::_sprites;
 std::map<LevelSystem::TILE, sf::Color> LevelSystem::_colours{ {WALL, Color::Blue }, { END, Color::Red } };
 
@@ -107,7 +107,7 @@ void LevelSystem::buildSprites() {
 }
 
 sf::Vector2f LevelSystem::getTilePosition(sf::Vector2ul p) {
-	return (Vector2f(p.x, p.y) * _tileSize);
+	return (Vector2f(p.x * _tileSize, p.y * _tileSize));
 }
 
 LevelSystem::TILE LevelSystem::getTile(sf::Vector2ul p) {
@@ -132,7 +132,7 @@ std::vector<sf::Vector2f> LevelSystem::findTiles(TILE t)
 	for (size_t y = 0; y < LevelSystem::getHeight(); ++y) {
 		for (size_t x = 0; x < LevelSystem::getWidth(); ++x) {
 			if (getTile({ x, y }) == t) {
-				found.push_back((getTilePosition({ x, y }) + Vector2f(_tileSize / 2.0f, _tileSize / 2.f)));
+				found.push_back((getTilePosition(Vector2ul{ x, y }) + Vector2f(_tileSize / 2.0f, _tileSize / 2.0f)));
 			}
 		}
 	}

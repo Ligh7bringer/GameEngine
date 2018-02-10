@@ -15,6 +15,7 @@ public:
 
 	void move(const sf::Vector2f&);
 	void move(float x, float y);
+	void increaseSpeed(float sp);
 
 	void Render() override;
 	void Update(double dt) override;

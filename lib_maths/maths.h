@@ -50,7 +50,7 @@ namespace sf {
 
 	//cout!
 	template<typename T>	
-	std::ostream &operator<<(std::ostream &s, const Vector2<T> &v) {
+	std::ostream &operator<<(std::ostream &os, const Vector2<T> &v) {
 		os << '(' << v.x << ", " << v.y << ')';
 		return os;
 	}
