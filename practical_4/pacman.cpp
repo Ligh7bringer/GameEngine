@@ -91,7 +91,7 @@ void GameScene::Respawn() {
 
 	nibbleLoc = ls::findTiles(ls::WAYPOINT);
 	for (const auto &nl : nibbleLoc) {
-		auto cherry = makeNibble(static_cast<Vector2ul>(nl), Color::Green, 5);
+		auto cherry = makeNibble(static_cast<Vector2ul>(nl), Color::White, 5);
 		_ents.list.push_back(cherry);
 		nibbles.push_back(cherry);
 	}
@@ -113,16 +113,25 @@ void GameScene::Update(double dt) {
 	Scene::Update(dt);
 }
 
+Text textPoints;
 void GameScene::Render() {
 	ls::Render(Renderer::getWindow());
+	
+	auto cp = player->GetComponent<PickUpComponent>();
+	textPoints.setString("Points: " + to_string(cp->getPoints()));
+	Renderer::queue(&textPoints);
+
 	_ents.Render();	
 	Scene::Render();
 }
 
 void GameScene::Load() {	
+	textPoints.setString("Points: ");
+	textPoints.setCharacterSize(22);
+	textPoints.setFont(font);
+
 	ls::loadLevelFile("res/levels/pacman.txt", 25.0f);
 	
-	//text.setString("Game scene!");
 	auto pl = make_shared<Entity>();
 	auto mp = pl->addComponent<PlayerMovementComponent>();
 	mp->setSpeed(100.0f);

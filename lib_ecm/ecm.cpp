@@ -7,9 +7,11 @@ Entity::Entity()
 }
 
 void Entity::Update(double dt) {
-	if (!_forDeletion) {
-		for (auto &_c : _components)
-			_c->Update(dt);
+	if (!is_forDeletion()) {
+		for (auto &_c : _components) {
+			if(!_c->is_forDeletion())
+				_c->Update(dt);
+		}
 	}
 }
 

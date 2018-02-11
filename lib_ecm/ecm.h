@@ -48,6 +48,17 @@ public:
 	const std::vector<std::shared_ptr<Component>>& getComponents() {
 		return _components;
 	}
+
+	template<typename ComponentType>
+	ComponentType* GetComponent() {
+		for (unsigned int i = 0; i < _components.size(); ++i) {
+			if (ComponentType* cmp = static_cast<ComponentType*>(_components[i].get())) {
+				return cmp;
+			}
+		}
+		return nullptr;
+	}
+
 };
 
 struct EntityManager {

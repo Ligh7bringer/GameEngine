@@ -63,10 +63,9 @@ void PlayerMovementComponent::Render() {
 
 static const Vector2i directions[] = { Vector2i{ 1, 0 }, Vector2i{ 0, 1 }, Vector2i{ 0, -1 }, Vector2i{ -1, 0 } };
 EnemyAIComponent::EnemyAIComponent(Entity * p) : ActorMovementComponent(p) {
-	//_state = ROAMING;
+	_state = ROAMING;
 	_speed = 100.0f;
 	_direction = Vector2f(directions[rand() % 4]);
-	_state = ROAMING;
 }
 
 //ENEMY COMPONENT
@@ -80,10 +79,7 @@ void EnemyAIComponent::Update(double dt) {
 	//inverse of current pos
 	const Vector2i badDir = -1 * Vector2i(_direction);
 	//random new direction
-	Vector2i newDir = directions[rand() % 4];
-
-	//std::cout << _direction.x << ", " << _direction.y << "; " << mva << std::endl;
-	move(_direction * mva);
+	Vector2i newDir = directions[(rand() % 4)];
 
 	switch (_state)
 	{
@@ -97,8 +93,10 @@ void EnemyAIComponent::Update(double dt) {
 		break;
 	case EnemyAIComponent::ROTATING:
 		//don't reverse and don't pick a direction which leads to a wall
-		while (_direction == Vector2f(badDir) && ls::getTileAt(newPos) == ls::WALL) { 
-			_direction = Vector2f(directions[rand() % 4]); 		//pick a new direction
+		//std::cout << badDir << ";" << _direction << std::endl;
+		while (newDir == badDir || ls::getTileAt(pos + Vector2f(newDir) * mva) == ls::WALL) {
+			newDir = directions[rand() % 4]; 		//pick a new direction
+			//std::cout << "WHILE LOOP: " << _state << newDir << badDir << std::endl;
 		}
 		_direction = Vector2f(newDir);
 		_state = ROTATED;
