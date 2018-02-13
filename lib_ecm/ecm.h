@@ -10,10 +10,11 @@
 class Component;
 
 class Entity {
-protected:
+private:
 	std::vector<std::shared_ptr<Component>> _components;
 	sf::Vector2f _position;
 	
+	int _points;
 	float _rotation;
 	bool _alive;
 	bool _visible;
@@ -36,6 +37,8 @@ public:
 	void setForDelete();
 	bool isVisible() const;
 	void setVisible(bool _value);
+	void setPoints(int p);
+	int getPoints();
 
 	template <typename T, typename... Targs>
 	std::shared_ptr<T> addComponent(Targs... params) {
@@ -52,10 +55,11 @@ public:
 	template<typename ComponentType>
 	ComponentType* GetComponent() {
 		for (unsigned int i = 0; i < _components.size(); ++i) {
-			if (ComponentType* cmp = static_cast<ComponentType*>(_components[i].get())) {
+			if (ComponentType* cmp = dynamic_cast<ComponentType*>(_components[i].get())) {
 				return cmp;
 			}
 		}
+
 		return nullptr;
 	}
 

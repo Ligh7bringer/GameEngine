@@ -3,7 +3,7 @@
 
 class PickUpComponent : public Component {
 protected:
-	float _points;
+	int _points;
 	std::vector <std::shared_ptr<Entity>> _entities;
 
 public:
@@ -12,5 +12,6 @@ public:
 	void Update(double dt) override;
 	void Render() override;
 	void setEntities(std::vector<std::shared_ptr<Entity>>& e);
-	float getPoints() const;
+	int getPoints() const;
+	void setPoints(int pts);
 };
