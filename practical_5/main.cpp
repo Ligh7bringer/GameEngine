@@ -1,15 +1,18 @@
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 using namespace sf;
 using namespace std;
 
-const int gameWidth = 600;
-const int gameHeight = 800;
+const int gameWidth = 800;
+const int gameHeight = 600;
 
 b2World* world;
 const float physics_scale = 30.0f;
-const float physics_scale_inv = -30.0f;
+const float physics_scale_inv = 1.f/physics_scale;
+int32 velocityIterations = 8;   //how strongly to correct velocity
+int32 positionIterations = 3;   //how strongly to correct position
 
 vector<b2Body*> bodies;
 vector<RectangleShape*> sprites;
@@ -61,6 +64,31 @@ void Init() {
 	const b2Vec2 gravity(0.0f, -10.0f);
 	world = new b2World(gravity);
 
+	Vector2f walls[] = {
+		//top
+		Vector2f(gameWidth * 0.5f, 5.f), Vector2f(gameWidth, 10.0f),
+		//bottom
+		Vector2f(gameWidth * 0.5f, gameHeight - 5.f), Vector2f(gameWidth, 10.f),
+		//left
+		Vector2f(5.f, gameHeight * .5f), Vector2f(10.f, gameHeight),
+		//right
+		Vector2f(gameWidth - 5.f, gameHeight * .5f), Vector2f(10.f, gameHeight)
+	};
+
+	//build walls
+	for(int i = 0; i < 7; i += 2) {
+		auto s = new RectangleShape();
+		s->setPosition(walls[i]);
+		s->setSize(walls[i+1]);
+		s->setOrigin(walls[i+1] / 2.0f);
+		s->setFillColor(Color::Red);
+		sprites.push_back(s);
+
+		//create body
+		auto b = CreatePhysicsBox(*world, false, *s);
+		bodies.push_back(b);
+	}
+
 	//create boxes
 	for (int i = 1; i < 11; ++i) {
 		//create shapes for each box
@@ -79,13 +107,19 @@ void Init() {
 	}
 }
 
-void Load() {
-}
-
 void Update(RenderWindow &window) {
 	// recalculate delta time
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
+
+	world->Step(dt, 1, 1);
+
+	for (int i = 0; i < bodies.size(); ++i) {
+		sprites[i]->setPosition(invert_height(bv2_to_sv2(bodies[i]->GetPosition())));
+		//cout << invert_height(bv2_to_sv2(bodies[i]->GetPosition())).y << endl;
+		sprites[i]->setRotation((180 / b2_pi) * bodies[i]->GetAngle());
+	}
+
 	//check and consume events
 	Event event;
 	while (window.pollEvent(event)) {
@@ -98,13 +132,6 @@ void Update(RenderWindow &window) {
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 		window.close();
 	}
-
-	world->Step(dt, 6, 2);
-
-	for (int i = 0; i < bodies.size(); ++i) {
-		sprites[i]->setPosition(invert_height(bv2_to_sv2(bodies[i]->GetPosition())));
-		sprites[i]->setRotation((180 / b2_pi) * bodies[i]->GetAngle());
-	}
 }
 
 void Render(RenderWindow &window) {
@@ -114,10 +141,10 @@ void Render(RenderWindow &window) {
 }
 
 int main() {
-	RenderWindow window(VideoMode(800, 600), "PHYSICS");
+	RenderWindow window(VideoMode(gameWidth, gameHeight), "PHYSICS");
 
 	Init();
-	Load();
+	//Load();
 
 	while (window.isOpen()) {
 		window.clear();

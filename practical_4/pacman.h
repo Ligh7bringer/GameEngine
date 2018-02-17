@@ -29,5 +29,5 @@ public:
 	void Update(double dt) override;
 	void Render() override;
 	void Load() override;
-	std::shared_ptr<Entity> makeNibble(sf::Vector2ul& nl, sf::Color c, float size, int pts);
+	std::shared_ptr<Entity> makeNibble(sf::Vector2f& nl, sf::Color c, float size, int pts);
 };

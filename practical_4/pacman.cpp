@@ -53,9 +53,9 @@ shared_ptr<Entity> player;
 vector<shared_ptr<Entity>> nibbles;
 vector<shared_ptr<Entity>> npcs;
 
-shared_ptr<Entity> GameScene::makeNibble(sf::Vector2ul& nl, sf::Color c, float size, int pts) {
+std::shared_ptr<Entity> GameScene::makeNibble(sf::Vector2f& nl, sf::Color c, float size, int pts) {
 	auto cherry = make_shared<Entity>();
-	cherry->setPosition(static_cast<Vector2f>(nl));
+	cherry->setPosition(nl);
 
 	auto s = cherry->addComponent<ShapeComponent>();
 	s->setShape<sf::CircleShape>(size);
@@ -85,14 +85,16 @@ void GameScene::Respawn() {
 
 	auto nibbleLoc = ls::findTiles(ls::EMPTY);
 	for (const auto &nl : nibbleLoc) {
-		auto cherry = makeNibble(static_cast<Vector2ul>(nl), Color::Red, 2, 10);
+		auto loc = static_cast<sf::Vector2f>(nl);
+		auto cherry = makeNibble(loc, Color::Red, 2, 10);
 		_ents.list.push_back(cherry);
 		nibbles.push_back(cherry);
 	}
 
 	nibbleLoc = ls::findTiles(ls::WAYPOINT);
 	for (const auto &nl : nibbleLoc) {
-		auto cherry = makeNibble(static_cast<Vector2ul>(nl), Color::White, 5, 30);
+		auto loc = static_cast<sf::Vector2f>(nl);
+		auto cherry = makeNibble(loc, Color::White, 5, 30);
 		_ents.list.push_back(cherry);
 		nibbles.push_back(cherry);
 	}
