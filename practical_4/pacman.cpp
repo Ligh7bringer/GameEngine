@@ -5,7 +5,7 @@
 #include <iostream>
 #include "cmp_sprite.h"
 #include "cmp_actor_movement.h"
-#include "levelsystem.h"
+#include "LevelSystem.h"
 #include "cmp_pickup.h"
 
 using namespace std;

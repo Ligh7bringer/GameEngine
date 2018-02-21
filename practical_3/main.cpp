@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "player.h"
-#include "levelsystem.h"
+#include "LevelSystem.h"
 
 using namespace sf;
 using namespace std;
