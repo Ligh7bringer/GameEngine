@@ -38,10 +38,10 @@ void PlayerPhysicsComponent::update(double dt) {
     teleport(ls::getTilePosition(ls::findTiles(ls::START)[0]));
   }
 
-  if (Keyboard::isKeyPressed(Keyboard::Left) ||
-      Keyboard::isKeyPressed(Keyboard::Right)) {
+  if (Keyboard::isKeyPressed(Keyboard::A) ||
+      Keyboard::isKeyPressed(Keyboard::D)) {
     // Moving Either Left or Right
-    if (Keyboard::isKeyPressed(Keyboard::Right)) {
+    if (Keyboard::isKeyPressed(Keyboard::D)) {
       if (getVelocity().x < _maxVelocity.x)
         impulse({(float)(dt * _groundspeed), 0});
     } else {
@@ -54,7 +54,7 @@ void PlayerPhysicsComponent::update(double dt) {
   }
 
   // Handle Jump
-  if (Keyboard::isKeyPressed(Keyboard::Up)) {
+  if (Keyboard::isKeyPressed(Keyboard::W)) {
     _grounded = isGrounded();
     if (_grounded) {
       setVelocity(Vector2f(getVelocity().x, 0.f));
